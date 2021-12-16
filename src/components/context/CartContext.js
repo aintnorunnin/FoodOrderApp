@@ -6,7 +6,6 @@ const CartContext = React.createContext({
 
 export const CartContextProvider = (props) => {
   const [cart, setCart] = useState([]);
-
   const addItemToCart = (item) => {
     setCart((prevCart) => {
       return [...prevCart, item];
