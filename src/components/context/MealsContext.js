@@ -43,11 +43,9 @@ export const MealsContextProvider = (props) => {
       return [meal, ...prevMeals];
     });
     setMealToPriceMap((prevMap) => {
-      const mealKey = meal.name;
-      const mealPrice = meal.price;
       return {
         ...prevMap,
-        mealKey: mealPrice,
+        [meal.name]: meal.price,
       };
     });
   };

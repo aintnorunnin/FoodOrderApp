@@ -17,11 +17,11 @@ export const CartContextProvider = (props) => {
   const [cart, setCart] = useState(initialCart);
 
   const addItemToCart = (item) => {
+    console.log(item);
     setCart((prevCart) => {
-      const itemKey = item.name;
       return {
         ...prevCart,
-        itemKey: ++prevCart.itemKey,
+        [item.name]: prevCart[item.name] + item.count,
       };
     });
   };

@@ -8,7 +8,7 @@ const MealItem = (props) => {
       <h3>{props.name}</h3>
       <span className={css.description}>{props.description}</span>
       <span className={css.price}>{`$${props.price}`}</span>
-      <MealItemForm />
+      <MealItemForm mealName={props.name} />
     </div>
   );
 };
