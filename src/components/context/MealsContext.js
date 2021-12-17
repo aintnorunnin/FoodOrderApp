@@ -29,6 +29,7 @@ const DUMMY_MEALS = [
 
 const MealsContext = React.createContext({
   meals: [],
+  mealToPriceMap: {},
   addNewMeal: () => {},
 });
 

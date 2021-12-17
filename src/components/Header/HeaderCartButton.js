@@ -3,12 +3,13 @@ import CartIcon from "../Cart/CartIcon";
 import CartContext from "../context/CartContext";
 import css from "./HeaderCart.module.css";
 
-const HeaderCartButton = () => {
+const HeaderCartButton = (props) => {
   const cartCxt = useContext(CartContext);
   const buttonHandler = () => {
     console.log(cartCxt.cart);
     console.log(`There are ${cartCxt.itemsInCart} items in the cart`);
     console.log(`The total price is ${cartCxt.totalPrice}`);
+    props.displayCart();
   };
   return (
     <button className={css.button} onClick={buttonHandler}>

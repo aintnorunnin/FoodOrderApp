@@ -11,13 +11,12 @@ const Meals = () => {
       <ul>
         {mealsCxt.meals.map((meal) => {
           return (
-            <li key={meal.id}>
-              <MealItem
-                name={meal.name}
-                description={meal.description}
-                price={meal.price}
-              ></MealItem>
-            </li>
+            <MealItem
+              key={meal.id}
+              name={meal.name}
+              description={meal.description}
+              price={meal.price}
+            ></MealItem>
           );
         })}
       </ul>
