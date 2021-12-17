@@ -10,22 +10,21 @@ const CartContext = React.createContext({
 
 export const CartContextProvider = (props) => {
   const mealsCxt = useContext(MealsContext);
-  const initialCart = {};
-
-  mealsCxt.meals.forEach((meal) => (initialCart[meal.name] = 0)); //Initialize Cart
+  const initialCart = { "": 0 };
 
   const [cart, setCart] = useState(initialCart);
 
   const addItemToCart = (item) => {
-    console.log(item);
     setCart((prevCart) => {
+      const newCount = prevCart[item.name] ?
+        prevCart[item.name] + item.count : item.count;
       return {
         ...prevCart,
-        [item.name]: prevCart[item.name] + item.count,
+        [item.name]: newCount,
       };
     });
   };
-  
+
   const cartCxt = {
     cart: cart,
     itemsInCart: Object.values(cart).reduce((item1, item2) => item1 + item2),
@@ -43,7 +42,8 @@ export const CartContextProvider = (props) => {
 function calculateTotalPrice(cart, mealToPriceMap) {
   let total = 0;
   for (const [name, count] of Object.entries(cart)) {
-    const priceOfMeal = mealToPriceMap[name]
+    if (name === "") continue;
+    const priceOfMeal = mealToPriceMap[name];
     total += count * priceOfMeal;
   }
   return total;

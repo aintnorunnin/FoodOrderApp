@@ -4,7 +4,7 @@ import css from "./Modal.module.css";
 const Modal = (props) => {
   return (
     <React.Fragment>
-      <div className={css.backdrop}></div>
+      <div className={css.backdrop} onClick={props.onClose}></div>
       <div className={css.modal}>{props.children}</div>
     </React.Fragment>
   );

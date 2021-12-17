@@ -5,34 +5,37 @@ import Modal from "../Modal/Modal";
 import CartItem from "./CartItem";
 import MealsContext from "../context/MealsContext";
 
-const Cart = () => {
+const Cart = (props) => {
   const cartCxt = useContext(CartContext);
   const mealCxt = useContext(MealsContext);
 
   return (
-    <Modal>
+    <Modal onClose={props.onClose}>
       <div className={css["cart-items"]}>
         <ul>
           {Object.keys(cartCxt.cart).map((itemName) => {
             return (
-              <li key={itemName}>
+              cartCxt.cart[itemName] > 0 && (
                 <CartItem
+                  key={itemName}
                   name={itemName}
                   count={cartCxt.cart[itemName]}
                   price={mealCxt.mealToPriceMap[itemName]}
                 ></CartItem>
-              </li>
+              )
             );
           })}
         </ul>
-        <div className={css.total}>
-          <span>Total Amount</span>
-          <span>{`$ ${cartCxt.totalPrice}`}</span>
-        </div>
-        <div className={css.actions}>
-          <button>Close</button>
-          <button>Order</button>
-        </div>
+      </div>
+      <div className={css.total}>
+        <span>Total Amount</span>
+        <span>{`$${cartCxt.totalPrice}`}</span>
+      </div>
+      <div className={css.actions}>
+        <button className={css["button--alt"]} onClick={props.onClose}>
+          Close
+        </button>
+        <button className={css.button}>Order</button>
       </div>
     </Modal>
   );

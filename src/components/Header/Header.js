@@ -7,19 +7,22 @@ import Cart from "../Cart/Cart";
 const Header = () => {
   const [displayCart, setDisplayCart] = useState(false);
 
-  const cartButtonHandler = () => {
+  const showCart = () => {
     setDisplayCart(true);
-  }
+  };
+  const hideCart = () => {
+    setDisplayCart(false);
+  };
   return (
     <React.Fragment>
       <header className={css.header}>
-          <h1>Brandon's Restaurant</h1>
-      <HeaderCartButton displayCart={cartButtonHandler}/>
+        <h1>Brandon's Restaurant</h1>
+        <HeaderCartButton displayCart={showCart} />
       </header>
       <div className={css["main-image"]}>
         <img src={mealImage} alt="Food on dining table"></img>
       </div>
-      {displayCart && <Cart />}
+      {displayCart && <Cart onClose={hideCart} />}
     </React.Fragment>
   );
 };
