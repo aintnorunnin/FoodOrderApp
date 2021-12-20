@@ -6,7 +6,16 @@ const INITIAL_CART_STATE = {
   itemsInCart: 0,
   totalPrice: 0,
 };
-const CartContext = React.createContext(INITIAL_CART_STATE);
+
+const DEFAULT_CART_CONTEXT = {
+  cart: INITIAL_CART_STAT.cart,
+  itemsInCart: INITIAL_CART_STAT.itemsInCart,
+  totalPrice: INITIAL_CART_STAT.totalPrice,
+  addItemToCart: () => {},
+  removeItemFromCart: () => {},
+};
+
+const CartContext = React.createContext(DEFAULT_CART_CONTEXT);
 
 export const CartContextProvider = (props) => {
   const mealsCxt = useContext(MealsContext);
