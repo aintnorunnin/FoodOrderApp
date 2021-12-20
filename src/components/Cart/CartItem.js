@@ -1,6 +1,19 @@
 import css from "./CartItem.module.css";
 
 const CartItem = (props) => {
+  const addItemToCart = () => {
+    props.addItem({
+      name: props.name,
+      count: 1,
+    });
+  };
+
+  const removeItemFromCart = () => {
+    props.removeItem({
+      name: props.name
+    });
+  };
+
   return (
     <li className={css["cart-item"]}>
       <div>
@@ -11,8 +24,8 @@ const CartItem = (props) => {
         </div>
       </div>
       <div className={css.actions}>
-        <button>-</button>
-        <button>+</button>
+        <button onClick={removeItemFromCart}>-</button>
+        <button onClick={addItemToCart}>+</button>
       </div>
     </li>
   );

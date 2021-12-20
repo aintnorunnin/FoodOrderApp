@@ -6,6 +6,7 @@ const CartContext = React.createContext({
   itemsInCart: 0,
   totalPrice: 0,
   addItemToCart: () => {},
+  removeItemFromCart: () => {},
 });
 
 export const CartContextProvider = (props) => {
@@ -25,11 +26,23 @@ export const CartContextProvider = (props) => {
     });
   };
 
+  const removeItemFromCart = (item) => {
+    setCart((prevCart) => {
+      const newCount = prevCart[item.name] ?
+        prevCart[item.name] - 1 : 0;
+      return {
+        ...prevCart,
+        [item.name]: newCount,
+      };
+    });
+  };
+
   const cartCxt = {
     cart: cart,
     itemsInCart: Object.values(cart).reduce((item1, item2) => item1 + item2),
     totalPrice: calculateTotalPrice(cart, mealsCxt.mealToPriceMap),
     addItemToCart: addItemToCart,
+    removeItemFromCart: removeItemFromCart,
   };
 
   return (
@@ -46,7 +59,7 @@ function calculateTotalPrice(cart, mealToPriceMap) {
     const priceOfMeal = mealToPriceMap[name];
     total += count * priceOfMeal;
   }
-  return total;
+  return total.toFixed(2);
 }
 
 export default CartContext;

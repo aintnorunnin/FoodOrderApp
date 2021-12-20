@@ -9,24 +9,28 @@ const Cart = (props) => {
   const cartCxt = useContext(CartContext);
   const mealCxt = useContext(MealsContext);
 
+  const cartItems = (
+    <ul>
+      {Object.keys(cartCxt.cart).map((itemName) => {
+        return (
+          cartCxt.cart[itemName] > 0 && (
+            <CartItem
+              key={itemName}
+              name={itemName}
+              count={cartCxt.cart[itemName]}
+              price={mealCxt.mealToPriceMap[itemName]}
+              addItem={cartCxt.addItemToCart}
+              removeItem={cartCxt.removeItemFromCart}
+            ></CartItem>
+          )
+        );
+      })}
+    </ul>
+  );
+
   return (
     <Modal onClose={props.onClose}>
-      <div className={css["cart-items"]}>
-        <ul>
-          {Object.keys(cartCxt.cart).map((itemName) => {
-            return (
-              cartCxt.cart[itemName] > 0 && (
-                <CartItem
-                  key={itemName}
-                  name={itemName}
-                  count={cartCxt.cart[itemName]}
-                  price={mealCxt.mealToPriceMap[itemName]}
-                ></CartItem>
-              )
-            );
-          })}
-        </ul>
-      </div>
+      <div className={css["cart-items"]}>{cartItems}</div>
       <div className={css.total}>
         <span>Total Amount</span>
         <span>{`$${cartCxt.totalPrice}`}</span>
