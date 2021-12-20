@@ -1,46 +1,60 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useReducer } from "react";
 import MealsContext from "./MealsContext";
 
-const CartContext = React.createContext({
+const INITIAL_CART_STATE = {
   cart: {},
   itemsInCart: 0,
   totalPrice: 0,
-  addItemToCart: () => {},
-  removeItemFromCart: () => {},
-});
+};
+const CartContext = React.createContext(INITIAL_CART_STATE);
 
 export const CartContextProvider = (props) => {
   const mealsCxt = useContext(MealsContext);
-  const initialCart = { "": 0 };
 
-  const [cart, setCart] = useState(initialCart);
+  const reducer = (state, action) => {
+    const prevCart = state.cart;
+    const item = action.item;
+    const priceOfMeal = mealsCxt.mealToPriceMap[item.name];
+    let newCount = 0;
+    let newCart = {};
+    switch (action.type) {
+      case "ADD_ITEM":
+        newCount = prevCart[item.name]
+          ? prevCart[item.name] + item.count
+          : item.count;
+        newCart = { ...prevCart, [item.name]: newCount };
+        return {
+          cart: newCart,
+          itemsInCart: state.itemsInCart + item.count,
+          totalPrice: state.totalPrice + priceOfMeal * item.count,
+        };
+      case "REMOVE_ITEM":
+        newCount = prevCart[item.name] ? prevCart[item.name] - 1 : 0;
+        newCart = { ...prevCart, [item.name]: newCount };
+        return {
+          cart: newCart,
+          itemsInCart: state.itemsInCart - 1,
+          totalPrice: state.totalPrice - priceOfMeal,
+        };
+      default:
+        return INITIAL_CART_STATE;
+    }
+  };
+
+  const [cartState, dispatchCart] = useReducer(reducer, INITIAL_CART_STATE);
 
   const addItemToCart = (item) => {
-    setCart((prevCart) => {
-      const newCount = prevCart[item.name] ?
-        prevCart[item.name] + item.count : item.count;
-      return {
-        ...prevCart,
-        [item.name]: newCount,
-      };
-    });
+    dispatchCart({ type: "ADD_ITEM", item: item });
   };
 
   const removeItemFromCart = (item) => {
-    setCart((prevCart) => {
-      const newCount = prevCart[item.name] ?
-        prevCart[item.name] - 1 : 0;
-      return {
-        ...prevCart,
-        [item.name]: newCount,
-      };
-    });
+    dispatchCart({ type: "REMOVE_ITEM", item: item });
   };
 
   const cartCxt = {
-    cart: cart,
-    itemsInCart: Object.values(cart).reduce((item1, item2) => item1 + item2),
-    totalPrice: calculateTotalPrice(cart, mealsCxt.mealToPriceMap),
+    cart: cartState.cart,
+    itemsInCart: cartState.itemsInCart,
+    totalPrice: cartState.totalPrice,
     addItemToCart: addItemToCart,
     removeItemFromCart: removeItemFromCart,
   };
@@ -51,15 +65,5 @@ export const CartContextProvider = (props) => {
     </CartContext.Provider>
   );
 };
-
-function calculateTotalPrice(cart, mealToPriceMap) {
-  let total = 0;
-  for (const [name, count] of Object.entries(cart)) {
-    if (name === "") continue;
-    const priceOfMeal = mealToPriceMap[name];
-    total += count * priceOfMeal;
-  }
-  return total.toFixed(2);
-}
 
 export default CartContext;
