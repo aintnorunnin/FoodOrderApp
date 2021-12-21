@@ -1,19 +1,22 @@
-import React, { useContext, useReducer } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import MealsContext from "./MealsContext";
 
-const INITIAL_CART_STATE = {
+const DEFAULT_CART_STATE = {
   cart: {},
   itemsInCart: 0,
   totalPrice: 0,
 };
 
 const DEFAULT_CART_CONTEXT = {
-  cart: INITIAL_CART_STAT.cart,
-  itemsInCart: INITIAL_CART_STAT.itemsInCart,
-  totalPrice: INITIAL_CART_STAT.totalPrice,
+  cart: DEFAULT_CART_STATE.cart,
+  itemsInCart: DEFAULT_CART_STATE.itemsInCart,
+  totalPrice: DEFAULT_CART_STATE.totalPrice,
   addItemToCart: () => {},
   removeItemFromCart: () => {},
 };
+
+const INITIAL_CART_STATE =
+  JSON.parse(localStorage.getItem("cart")) || DEFAULT_CART_STATE;
 
 const CartContext = React.createContext(DEFAULT_CART_CONTEXT);
 
@@ -46,7 +49,7 @@ export const CartContextProvider = (props) => {
           totalPrice: state.totalPrice - priceOfMeal,
         };
       default:
-        return INITIAL_CART_STATE;
+        return DEFAULT_CART_STATE;
     }
   };
 
@@ -63,10 +66,14 @@ export const CartContextProvider = (props) => {
   const cartCxt = {
     cart: cartState.cart,
     itemsInCart: cartState.itemsInCart,
-    totalPrice: cartState.totalPrice,
+    totalPrice: cartState.totalPrice.toFixed(2),
     addItemToCart: addItemToCart,
     removeItemFromCart: removeItemFromCart,
   };
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartState));
+  }, [cartState]);
 
   return (
     <CartContext.Provider value={cartCxt}>
