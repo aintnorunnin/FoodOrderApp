@@ -5,6 +5,7 @@ import MealItem from "./MealItem";
 import css from "./Meals.module.css";
 
 const Meals = () => {
+  console.log("Meals");
   const mealsCxt = useContext(MealsContext);
   return (
     <Card className={css.meals}>
@@ -23,4 +24,4 @@ const Meals = () => {
     </Card>
   );
 };
-export default Meals;
+export default React.memo(Meals);

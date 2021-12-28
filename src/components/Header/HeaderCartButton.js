@@ -4,12 +4,11 @@ import CartContext from "../context/CartContext";
 import css from "./HeaderCart.module.css";
 
 const HeaderCartButton = (props) => {
+  console.log("Header Button")
   const cartCxt = useContext(CartContext);
-  const buttonHandler = () => {
-    props.displayCart();
-  };
+  
   return (
-    <button className={css.button} onClick={buttonHandler}>
+    <button className={css.button} onClick={props.displayCart}>
       <span className={css.icon}>
         <CartIcon />
       </span>
