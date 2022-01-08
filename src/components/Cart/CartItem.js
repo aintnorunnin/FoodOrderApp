@@ -5,12 +5,14 @@ const CartItem = (props) => {
     props.addItem({
       name: props.name,
       count: 1,
+      price: props.price,
     });
   };
 
   const removeItemFromCart = () => {
     props.removeItem({
-      name: props.name
+      name: props.name,
+      price: props.price
     });
   };
 

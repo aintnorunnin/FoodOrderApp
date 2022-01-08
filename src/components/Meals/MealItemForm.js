@@ -14,10 +14,12 @@ const MealItemForm = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    if (amountRef.current.count === "0" || amountRef.current.count === "") return;
+    if (amountRef.current.count === "0" || amountRef.current.count === "")
+      return;
     cartCxt.addItemToCart({
       name: props.mealName,
       count: parseInt(amountRef.current.count, 10),
+      price: props.price,
     });
     setAmount("");
   };

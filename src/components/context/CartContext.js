@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useReducer } from "react";
-import MealsContext from "./MealsContext";
+import React, { useEffect, useReducer } from "react";
 
 const DEFAULT_CART_STATE = {
   cart: {},
@@ -21,28 +20,33 @@ const INITIAL_CART_STATE =
 const CartContext = React.createContext(DEFAULT_CART_CONTEXT);
 
 export const CartContextProvider = (props) => {
-  const mealsCxt = useContext(MealsContext);
-
   const reducer = (state, action) => {
     const prevCart = state.cart;
     const item = action.item;
-    const priceOfMeal = mealsCxt.mealToPriceMap[item.name];
+    const priceOfMeal = item.price;
+
     let newCount = 0;
     let newCart = {};
     switch (action.type) {
       case "ADD_ITEM":
         newCount = prevCart[item.name]
-          ? prevCart[item.name] + item.count
+          ? prevCart[item.name].count + item.count
           : item.count;
-        newCart = { ...prevCart, [item.name]: newCount };
+        newCart = {
+          ...prevCart,
+          [item.name]: { count: newCount, unitPrice: priceOfMeal },
+        };
         return {
           cart: newCart,
           itemsInCart: state.itemsInCart + item.count,
           totalPrice: state.totalPrice + priceOfMeal * item.count,
         };
       case "REMOVE_ITEM":
-        newCount = prevCart[item.name] ? prevCart[item.name] - 1 : 0;
-        newCart = { ...prevCart, [item.name]: newCount };
+        newCount = prevCart[item.name] ? prevCart[item.name].count - 1 : 0;
+        newCart = {
+          ...prevCart,
+          [item.name]: { count: newCount, unitPrice: priceOfMeal },
+        };
         return {
           cart: newCart,
           itemsInCart: state.itemsInCart - 1,
@@ -53,7 +57,7 @@ export const CartContextProvider = (props) => {
     }
   };
 
-  const [cartState, dispatchCart] = useReducer(reducer, INITIAL_CART_STATE);
+  const [cartState, dispatchCart] = useReducer(reducer, DEFAULT_CART_STATE);
 
   const addItemToCart = (item) => {
     dispatchCart({ type: "ADD_ITEM", item: item });
@@ -63,12 +67,17 @@ export const CartContextProvider = (props) => {
     dispatchCart({ type: "REMOVE_ITEM", item: item });
   };
 
+  const resetCart = () => {
+    dispatchCart({ type: "DEFAULT", item: {} });
+  };
+
   const cartCxt = {
     cart: cartState.cart,
     itemsInCart: cartState.itemsInCart,
     totalPrice: cartState.totalPrice.toFixed(2),
     addItemToCart: addItemToCart,
     removeItemFromCart: removeItemFromCart,
+    resetCart: resetCart,
   };
 
   useEffect(() => {
